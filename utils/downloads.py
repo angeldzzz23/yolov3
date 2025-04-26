@@ -120,7 +120,7 @@ def attempt_download(file, repo="ultralytics/yolov5", release="v7.0"):
             file.parent.mkdir(parents=True, exist_ok=True)  # make parent dir (if required)
             safe_download(
                 file,
-                url=f"https://github.com/{repo}/releases/download/{tag}/{name}",
+                url=f"https://storage.googleapis.com/nsh25-yolov3-weights/{name}",
                 min_bytes=1e5,
                 error_msg=f"{file} missing, try downloading from https://github.com/{repo}/releases/{tag}",
             )
