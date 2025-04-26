@@ -18,7 +18,7 @@ def detect():
     subprocess.run(cmd, capture_output=True, text=True)
     
     # Run YOLOv3 detection
-    cmd = ["python", "detect.py", "--weights", "yolov3-tiny.pt", "--img", "640", "--conf", "0.25", "--source", image_path]
+    cmd = ["python", "detect.py", "--weights", "yolov5l.pt", "--img", "640", "--conf", "0.25", "--source", image_path]
     result = subprocess.run(cmd, capture_output=True, text=True)
 
     print(result.stdout)
