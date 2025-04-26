@@ -1,9 +1,28 @@
 import base64
 import subprocess
+from pathlib import Path
 
 from flask import Flask, jsonify, request
 
+from utils.downloads import safe_download
+
 app = Flask(__name__)
+
+@app.route("/update-model/<model_name>", methods=["POST"])
+def update_model(model_name):
+    if not model_name:
+        return jsonify({"error": "Model name is required"}), 400
+    
+    # Download the specified model
+    model_file = Path(f"{model_name}.pt")
+    safe_download(
+        file=model_file,
+        url=f"https://storage.googleapis.com/nsh25-yolov3-weights/{model_name}.pt",
+        min_bytes=1e5,
+        error_msg=f"{model_name}.pt could not be downloaded"
+    )
+
+    return jsonify({"message": f"Model {model_name} download complete"}), 200
 
 @app.route("/detect", methods=["POST"])
 def detect():
@@ -20,9 +39,6 @@ def detect():
     # Run YOLOv3 detection
     cmd = ["python", "detect.py", "--weights", "yolov5l.pt", "--img", "640", "--conf", "0.25", "--source", image_path]
     result = subprocess.run(cmd, capture_output=True, text=True)
-
-    print(result.stdout)
-    print(result.stderr)
 
     # Get the output image
     output_image_path = "runs/detect/exp/image.jpg"
